@@ -1,0 +1,57 @@
+local p = game.Players.LocalPlayer
+local RS = game:GetService("RunService")
+local size = 18
+
+local field = Instance.new("Part")
+field.Name = "NanahhbDome"
+field.Shape = Enum.PartType.Ball
+field.Material = Enum.Material.ForceField
+field.Color = Color3.fromRGB(0, 140, 255)
+field.Transparency = 0.4
+field.Anchored = true
+field.CanCollide = false
+field.CanQuery = false
+field.Size = Vector3.new(size, size, size)
+field.Parent = workspace
+
+local billboard = Instance.new("BillboardGui")
+billboard.Name = "NanahhbTag"
+billboard.Size = UDim2.fromOffset(200, 45)
+billboard.StudsOffset = Vector3.new(0, 11, 0)
+billboard.AlwaysOnTop = true
+billboard.Parent = field
+
+local label = Instance.new("TextLabel")
+label.Size = UDim2.fromScale(1, 1)
+label.BackgroundTransparency = 1
+label.Text = "Nanahhb"
+label.TextColor3 = Color3.fromRGB(0, 200, 255)
+label.TextStrokeTransparency = 0
+label.TextScaled = true
+label.Font = Enum.Font.GothamBold
+label.Parent = billboard
+
+RS.Heartbeat:Connect(function()
+    local char = p.Character
+    local myRoot = char and char:FindFirstChild("HumanoidRootPart")
+    if not myRoot then return end
+
+    field.CFrame = myRoot.CFrame
+
+    for _, plr in pairs(game.Players:GetPlayers()) do
+        if plr ~= p and plr.Character then
+            local h = plr.Character:FindFirstChild("HumanoidRootPart")
+
+            if h then
+                local offset = h.Position - myRoot.Position
+                local dist = offset.Magnitude
+
+                if dist > 0 and dist <= 9 then
+                    local dir = offset.Unit
+                    h.CFrame = h.CFrame + dir * 1.5
+                    h.AssemblyLinearVelocity = dir * 200
+                end
+            end
+        end
+    end
+end)
